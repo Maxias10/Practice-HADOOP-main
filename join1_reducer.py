@@ -1,26 +1,26 @@
 #!/usr/bin/env python
+
 import sys
 
-current_show = None
+current_program = None
 current_count = 0
-is_abc = False
+program = None
 
 for line in sys.stdin:
     line = line.strip()
-    title, value = line.split('\t')
-
-    if title != current_show:
-        if current_show is not None and is_abc:
-            print(f"{current_show} {current_count}")
-        current_show = title
-        current_count = 0
-        is_abc = False
-
-    if value == 'ABC':
-        is_abc = True
+    program, count = line.split('\t')
+    try:
+        count = int(count)
+    except ValueError:
+        continue
+    
+    if current_program == program:
+        current_count += count
     else:
-        current_count += int(value)
+        if current_program:
+            print(f'{current_program}\t{current_count}')
+        current_program = program
+        current_count = count
 
-# Don't forget to output the last show if it was on ABC
-if is_abc:
-    print(f"{current_show} {current_count}")
+if current_program == program:
+    print(f'{current_program}\t{current_count}')
